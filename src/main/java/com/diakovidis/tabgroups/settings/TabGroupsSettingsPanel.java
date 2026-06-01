@@ -1,4 +1,4 @@
-package com.diakovidis.taborganizer.settings;
+package com.diakovidis.tabgroups.settings;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -7,7 +7,7 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
-import com.diakovidis.taborganizer.model.TabGroup;
+import com.diakovidis.tabgroups.model.TabGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Swing panel for editing Tab Organizer settings.
+ * Swing panel for editing Tab Groups settings.
  * Provides a list of Tab Groups on the left, and group details (name, order, regex) on the right.
  */
-public class TabOrganizerSettingsPanel {
+public class TabGroupsSettingsPanel {
 
     private final JPanel mainPanel;
 
@@ -42,7 +42,7 @@ public class TabOrganizerSettingsPanel {
     /** Guard flag to suppress selection listener during programmatic list updates. */
     private boolean isUpdating = false;
 
-    public TabOrganizerSettingsPanel() {
+    public TabGroupsSettingsPanel() {
         mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 

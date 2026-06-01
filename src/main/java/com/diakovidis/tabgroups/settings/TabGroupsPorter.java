@@ -1,4 +1,4 @@
-package com.diakovidis.taborganizer.settings;
+package com.diakovidis.tabgroups.settings;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.diakovidis.taborganizer.model.TabGroup;
+import com.diakovidis.tabgroups.model.TabGroup;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles JSON export and import of Tab Organizer tab-group settings.
+ * Handles JSON export and import of Tab Groups tab-group settings.
  *
  * <p>File format (pretty-printed JSON):</p>
  * <pre>
@@ -37,8 +37,8 @@ public final class TabGroupsPorter {
 
     private static final int FORMAT_VERSION = 1;
     private static final String FILE_EXT  = "json";
-    private static final String FILE_DESC = "Tab Organizer Settings (*.json)";
-    private static final String DEFAULT_FILENAME = "tab-organizer-settings.json";
+    private static final String FILE_DESC = "Tab Groups Settings (*.json)";
+    private static final String DEFAULT_FILENAME = "tab-groups-settings.json";
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -55,7 +55,7 @@ public final class TabGroupsPorter {
      */
     public static boolean export(List<TabGroup> groups, Component parent) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Export Tab Organizer Settings");
+        chooser.setDialogTitle("Export Tab Groups Settings");
         chooser.setFileFilter(new FileNameExtensionFilter(FILE_DESC, FILE_EXT));
         chooser.setSelectedFile(new File(DEFAULT_FILENAME));
 
@@ -102,7 +102,7 @@ public final class TabGroupsPorter {
      */
     public static List<TabGroup> importGroups(Component parent) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Import Tab Organizer Settings");
+        chooser.setDialogTitle("Import Tab Groups Settings");
         chooser.setFileFilter(new FileNameExtensionFilter(FILE_DESC, FILE_EXT));
 
         if (chooser.showOpenDialog(parent) != JFileChooser.APPROVE_OPTION) {
@@ -111,7 +111,7 @@ public final class TabGroupsPorter {
 
         // Confirmation: current config will be overwritten
         int confirm = JOptionPane.showConfirmDialog(parent,
-                "<html><b>Importing will replace your current Tab Organizer configuration.</b><br><br>" +
+                "<html><b>Importing will replace your current Tab Groups configuration.</b><br><br>" +
                 "All existing tab groups will be removed and replaced with the groups<br>" +
                 "from the selected file. This cannot be undone.<br><br>" +
                 "Do you want to continue?</html>",
@@ -164,7 +164,7 @@ public final class TabGroupsPorter {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 
         if (!root.has("tabGroups")) {
-            throw new IllegalArgumentException("Missing 'tabGroups' key — not a valid Tab Organizer settings file.");
+            throw new IllegalArgumentException("Missing 'tabGroups' key — not a valid Tab Groups settings file.");
         }
 
         JsonArray array = root.getAsJsonArray("tabGroups");

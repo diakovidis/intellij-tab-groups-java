@@ -1,11 +1,11 @@
-package com.diakovidis.taborganizer.settings;
+package com.diakovidis.tabgroups.settings;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
-import com.diakovidis.taborganizer.model.TabGroup;
+import com.diakovidis.tabgroups.model.TabGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,19 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Persists Tab Organizer settings per-project.
+ * Persists Tab Groups settings per-project.
  */
 @Service(Service.Level.PROJECT)
 @State(
-        name = "TabOrganizerSettings",
-        storages = @Storage("tabOrganizer.xml")
+        name = "TabGroupsSettings",
+        storages = @Storage("tabGroups.xml")
 )
-public final class TabOrganizerSettings implements PersistentStateComponent<TabOrganizerSettings.State> {
+public final class TabGroupsSettings implements PersistentStateComponent<TabGroupsSettings.State> {
 
     private State myState = new State();
 
-    public static TabOrganizerSettings getInstance(@NotNull Project project) {
-        return project.getService(TabOrganizerSettings.class);
+    public static TabGroupsSettings getInstance(@NotNull Project project) {
+        return project.getService(TabGroupsSettings.class);
     }
 
     @Override

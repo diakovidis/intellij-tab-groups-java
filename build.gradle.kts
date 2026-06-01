@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.13.1"
 }
 
-group = "com.taborganizer"
+group = "com.tabgroups"
 version = "1.0.0"
 
 // Set via -PplatformVersion=2026.1 on the command line, or edit the default here.

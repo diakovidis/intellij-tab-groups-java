@@ -1,7 +1,7 @@
-package com.diakovidis.taborganizer.service;
+package com.diakovidis.tabgroups.service;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.diakovidis.taborganizer.model.TabGroup;
+import com.diakovidis.tabgroups.model.TabGroup;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;

@@ -1,4 +1,4 @@
-package com.diakovidis.taborganizer.service;
+package com.diakovidis.tabgroups.service;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -7,11 +7,10 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.diakovidis.taborganizer.model.TabGroup;
-import com.diakovidis.taborganizer.settings.TabOrganizerSettings;
+import com.diakovidis.tabgroups.model.TabGroup;
+import com.diakovidis.tabgroups.settings.TabGroupsSettings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,12 +30,12 @@ public final class TabReorderExecutor {
 
     /**
      * Reorders all open editor tabs in the given project according to the
-     * persisted {@link TabOrganizerSettings}.
+     * persisted {@link TabGroupsSettings}.
      *
      * @return the number of unpinned tabs that were reordered, or 0 if nothing happened.
      */
     public static int reorder(Project project) {
-        return reorder(project, TabOrganizerSettings.getInstance(project).getTabGroups());
+        return reorder(project, TabGroupsSettings.getInstance(project).getTabGroups());
     }
 
     /**

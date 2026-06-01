@@ -1,14 +1,14 @@
-package com.diakovidis.taborganizer.action;
+package com.diakovidis.tabgroups.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.diakovidis.taborganizer.service.TabReorderExecutor;
+import com.diakovidis.tabgroups.service.TabReorderExecutor;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Action that reorders all currently open editor tabs based on Tab Organizer rules.
+ * Action that reorders all currently open editor tabs based on Tab Groups rules.
  * Available from the editor tab right-click popup menu as "Reorder Tabs".
  */
 public class ReorderTabsAction extends AnAction {

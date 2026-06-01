@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>com.taborganizer.intellij-tab-organizer-java</id>
-    <name>Tab Organizer</name>
-    <vendor>taborganizer</vendor>
+    <id>com.tabgroups.intellij-tab-groups-java</id>
+    <name>Tab Groups</name>
+    <vendor>tabgroups</vendor>
     <version>1.0.0</version>
     <description><![CDATA[
         Organizes editor tabs based on user-defined grouping rules with regex matching.
@@ -17,17 +17,17 @@
         <!-- Settings/Preferences panel -->
         <projectConfigurable
                 parentId="tools"
-                instance="com.diakovidis.taborganizer.settings.TabOrganizerConfigurable"
-                id="com.diakovidis.taborganizer.settings.TabOrganizerConfigurable"
-                displayName="Tab Organizer"/>
+                instance="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
+                id="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
+                displayName="Tab Groups"/>
     </extensions>
 
     <actions>
         <!-- Action in the editor tab popup menu -->
-        <action id="com.diakovidis.taborganizer.action.ReorderTabsAction"
-                class="com.diakovidis.taborganizer.action.ReorderTabsAction"
+        <action id="com.diakovidis.tabgroups.action.ReorderTabsAction"
+                class="com.diakovidis.tabgroups.action.ReorderTabsAction"
                 text="Reorder Tabs"
-                description="Reorder open editor tabs according to Tab Organizer rules">
+                description="Reorder open editor tabs according to Tab Groups rules">
             <add-to-group group-id="EditorTabPopupMenu" anchor="first"/>
         </action>
     </actions>

@@ -1,4 +1,4 @@
-package com.diakovidis.taborganizer.model;
+package com.diakovidis.tabgroups.model;
 
 /**
  * Represents a tab group with a name, order priority, and a regex pattern

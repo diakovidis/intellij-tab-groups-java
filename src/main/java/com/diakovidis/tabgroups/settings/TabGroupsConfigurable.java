@@ -1,8 +1,8 @@
-package com.diakovidis.taborganizer.settings;
+package com.diakovidis.tabgroups.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import com.diakovidis.taborganizer.model.TabGroup;
+import com.diakovidis.tabgroups.model.TabGroup;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,27 +10,27 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- * Settings configurable for Tab Organizer.
- * Appears under Settings > Tools > Tab Organizer.
+ * Settings configurable for Tab Groups.
+ * Appears under Settings > Tools > Tab Groups.
  */
-public class TabOrganizerConfigurable implements Configurable {
+public class TabGroupsConfigurable implements Configurable {
 
     private final Project project;
-    private TabOrganizerSettingsPanel settingsPanel;
+    private TabGroupsSettingsPanel settingsPanel;
 
-    public TabOrganizerConfigurable(Project project) {
+    public TabGroupsConfigurable(Project project) {
         this.project = project;
     }
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "Tab Organizer";
+        return "Tab Groups";
     }
 
     @Override
     public @Nullable JComponent createComponent() {
-        settingsPanel = new TabOrganizerSettingsPanel();
+        settingsPanel = new TabGroupsSettingsPanel();
         return settingsPanel.getPanel();
     }
 
@@ -39,7 +39,7 @@ public class TabOrganizerConfigurable implements Configurable {
         if (settingsPanel == null) {
             return false;
         }
-        TabOrganizerSettings settings = TabOrganizerSettings.getInstance(project);
+        TabGroupsSettings settings = TabGroupsSettings.getInstance(project);
         List<TabGroup> saved = settings.getTabGroups();
         List<TabGroup> current = settingsPanel.getTabGroups();
         return !tabGroupsEqual(saved, current);
@@ -50,7 +50,7 @@ public class TabOrganizerConfigurable implements Configurable {
         if (settingsPanel == null) {
             return;
         }
-        TabOrganizerSettings settings = TabOrganizerSettings.getInstance(project);
+        TabGroupsSettings settings = TabGroupsSettings.getInstance(project);
         settings.setTabGroups(settingsPanel.getTabGroups());
     }
 
@@ -59,7 +59,7 @@ public class TabOrganizerConfigurable implements Configurable {
         if (settingsPanel == null) {
             return;
         }
-        TabOrganizerSettings settings = TabOrganizerSettings.getInstance(project);
+        TabGroupsSettings settings = TabGroupsSettings.getInstance(project);
         settingsPanel.setTabGroups(settings.getTabGroups());
     }
 

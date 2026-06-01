@@ -1,2 +1,2 @@
-rootProject.name = "intellij-tab-organizer-java"
+rootProject.name = "intellij-tab-groups-java"
 
