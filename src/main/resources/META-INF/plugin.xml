@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <description><![CDATA[
         Organizes editor tabs based on user-defined grouping rules with regex matching.
-        Right-click any editor tab and select "Reorder Tabs" to sort open tabs by your configured groups.
+        Right-click any editor tab and select "Group and Sort Tabs" to sort open tabs by your configured groups.
     ]]></description>
 
     <!-- since-build="251" = 2025.1, no until-build = compatible with all future versions -->
@@ -26,7 +26,7 @@
         <!-- Action in the editor tab popup menu -->
         <action id="com.diakovidis.tabgroups.action.ReorderTabsAction"
                 class="com.diakovidis.tabgroups.action.ReorderTabsAction"
-                text="Reorder Tabs"
+                text="Group and Sort Tabs"
                 description="Reorder open editor tabs according to Tab Groups rules">
             <add-to-group group-id="EditorTabPopupMenu" anchor="first"/>
         </action>

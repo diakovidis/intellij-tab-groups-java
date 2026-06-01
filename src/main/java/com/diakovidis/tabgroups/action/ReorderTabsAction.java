@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Action that reorders all currently open editor tabs based on Tab Groups rules.
- * Available from the editor tab right-click popup menu as "Reorder Tabs".
+ * Available from the editor tab right-click popup menu as "Group and Sort Tabs".
  */
 public class ReorderTabsAction extends AnAction {
 
