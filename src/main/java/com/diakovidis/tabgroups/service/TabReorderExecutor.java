@@ -2,25 +2,32 @@ package com.diakovidis.tabgroups.service;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.EditorComposite;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.tabs.JBTabs;
+import com.intellij.ui.tabs.TabInfo;
+import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.diakovidis.tabgroups.model.TabGroup;
 import com.diakovidis.tabgroups.settings.TabGroupsSettings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
- * Shared logic for reordering tabs. Used by both the right-click action
- * and the "Test" button in Settings.
+ * Shared logic for reordering tabs. Uses {@code JBTabsImpl.sortTabs()} to move
+ * tabs in-place — the exact same internal mechanism as drag-and-drop — with no
+ * close/reopen, no flicker, and no loss of editor scroll state.
  * <p>
- * Pinned tabs are never touched — they keep their position and pinned state.
+ * Pinned tabs are never touched; they keep their original relative positions at
+ * the front of each editor window.
  */
 public final class TabReorderExecutor {
 
@@ -30,97 +37,125 @@ public final class TabReorderExecutor {
     }
 
     /**
-     * Reorders all open editor tabs in the given project according to the
-     * persisted {@link TabGroupsSettings}.
+     * Reorders tabs in the given project using the persisted {@link TabGroupsSettings}.
      *
-     * @return the number of unpinned tabs that were reordered, or 0 if nothing happened.
+     * @return the number of editor windows that were sorted.
      */
-    public static int reorder(Project project) {
+    public static int reorder(@NotNull Project project) {
         return reorder(project, TabGroupsSettings.getInstance(project).getTabGroups());
     }
 
     /**
-     * Reorders all open (unpinned) editor tabs using the supplied tab-group rules
-     * (useful for testing with unsaved / in-progress settings).
-     * Pinned tabs are left completely untouched.
+     * Reorders all open (unpinned) editor tabs using the supplied tab-group rules.
+     * Each editor window is sorted independently.
+     * <p>
+     * Uses {@code JBTabsImpl.sortTabs(Comparator)} — the same call the platform
+     * makes when the user finishes a drag-and-drop tab move.
+     *
+     * @return the number of editor windows that were sorted, or 0 if nothing happened.
      */
-    public static int reorder(Project project, List<TabGroup> tabGroups) {
-        if (project == null || project.isDisposed()) {
-            return 0;
-        }
+    public static int reorder(@NotNull Project project, @NotNull List<TabGroup> tabGroups) {
+        if (project.isDisposed()) return 0;
 
-        FileEditorManager editorManager = FileEditorManager.getInstance(project);
-        List<VirtualFile> openFiles = List.of(editorManager.getOpenFiles());
+        // Pre-sort groups once (ascending by order) so matching priority is stable
+        List<TabGroup> sortedGroups = new ArrayList<>(tabGroups);
+        sortedGroups.sort(Comparator.comparingInt(TabGroup::getOrder));
 
-        if (openFiles.isEmpty()) {
-            LOG.info("TabReorderExecutor: No open tabs to reorder.");
-            return 0;
-        }
+        int defaultOrder = sortedGroups.isEmpty() ? Integer.MAX_VALUE
+                : sortedGroups.stream().mapToInt(TabGroup::getOrder).max().orElse(0) + 1;
 
-        // ── Identify pinned files ────────────────────────────────────────────
-        Set<VirtualFile> pinnedFiles = collectPinnedFiles(project);
-        LOG.info("TabReorderExecutor: " + pinnedFiles.size() + " pinned tab(s) will be skipped.");
-
-        // Separate unpinned files (preserve encounter order from getOpenFiles)
-        List<VirtualFile> unpinnedFiles = new ArrayList<>();
-        for (VirtualFile file : openFiles) {
-            if (!pinnedFiles.contains(file)) {
-                unpinnedFiles.add(file);
-            }
-        }
-
-        if (unpinnedFiles.isEmpty()) {
-            LOG.info("TabReorderExecutor: All tabs are pinned — nothing to reorder.");
-            return 0;
-        }
-
-        LOG.info("TabReorderExecutor: Reordering " + unpinnedFiles.size() + " unpinned tab(s).");
-
-        List<VirtualFile> sortedUnpinned = TabSorter.sort(unpinnedFiles, tabGroups);
-
-        // Remember which file had focus (we restore it after reordering)
-        FileEditor selectedEditor = editorManager.getSelectedEditor();
-        VirtualFile selectedFile = selectedEditor != null ? selectedEditor.getFile() : null;
+        int[] sortedWindows = {0};
 
         ApplicationManager.getApplication().invokeLater(() -> {
-            // Close only unpinned tabs; pinned tabs stay put
-            for (VirtualFile file : unpinnedFiles) {
-                editorManager.closeFile(file);
+            try {
+                FileEditorManagerEx managerEx = FileEditorManagerEx.getInstanceEx(project);
+                for (EditorWindow window : managerEx.getWindows()) {
+                    if (sortWindow(window, sortedGroups, defaultOrder)) {
+                        sortedWindows[0]++;
+                    }
+                }
+            } catch (Exception ex) {
+                LOG.warn("TabReorderExecutor: reorder failed", ex);
             }
-            // Reopen unpinned tabs in sorted order
-            for (VirtualFile file : sortedUnpinned) {
-                editorManager.openFile(file, false, false);
-            }
-            // Restore previously active tab
-            if (selectedFile != null && selectedFile.isValid()) {
-                editorManager.openFile(selectedFile, true, true);
-            }
-            LOG.info("TabReorderExecutor: Tabs reordered successfully.");
+            LOG.info("TabReorderExecutor: sorted " + sortedWindows[0] + " window(s).");
         });
 
-        return unpinnedFiles.size();
+        return sortedWindows[0];
     }
 
     /**
-     * Collects all files whose tab is currently pinned across every editor window.
+     * Sorts a single editor window's tabs using {@code JBTabsImpl.sortTabs()}.
+     *
+     * @return {@code true} if sorting was applied, {@code false} if skipped.
      */
-    private static Set<VirtualFile> collectPinnedFiles(Project project) {
-        Set<VirtualFile> pinned = new HashSet<>();
-        try {
-            FileEditorManagerEx managerEx = FileEditorManagerEx.getInstanceEx(project);
-            for (EditorWindow window : managerEx.getWindows()) {
-                for (VirtualFile file : window.getFileList()) {
-                    if (window.isFilePinned(file)) {
-                        pinned.add(file);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // If the internal API changes between IDE versions, degrade gracefully
-            // (treat all tabs as unpinned rather than crashing)
-            LOG.warn("TabReorderExecutor: Could not detect pinned tabs — all tabs will be reordered.", e);
+    @SuppressWarnings("UnstableApiUsage")
+    private static boolean sortWindow(@NotNull EditorWindow window,
+                                      @NotNull List<TabGroup> sortedGroups,
+                                      int defaultOrder) {
+        JBTabs tabs = window.getTabbedPane().getTabs();
+        if (!(tabs instanceof JBTabsImpl jbTabs)) return false;
+
+        List<TabInfo> current = jbTabs.getTabs();
+        if (current.isEmpty()) return false;
+
+        // Snapshot original indices so pinned tabs stay in their relative order
+        Map<TabInfo, Integer> originalIndex = new HashMap<>();
+        for (int i = 0; i < current.size(); i++) {
+            originalIndex.put(current.get(i), i);
         }
-        return pinned;
+
+        long unpinnedCount = current.stream().filter(t -> !t.isPinned()).count();
+        if (unpinnedCount == 0) {
+            LOG.info("TabReorderExecutor: all tabs pinned in window — skipping.");
+            return false;
+        }
+
+        // sortTabs() calls reorderTab(TabInfo, int) internally for each
+        // out-of-place tab — identical to what happens after a drag-and-drop.
+        jbTabs.sortTabs((a, b) -> {
+            boolean aPinned = a.isPinned();
+            boolean bPinned = b.isPinned();
+
+            // Pinned tabs stay at the front in their original relative order
+            if (aPinned && bPinned)
+                return Integer.compare(originalIndex.getOrDefault(a, 0),
+                                       originalIndex.getOrDefault(b, 0));
+            if (aPinned) return -1;
+            if (bPinned) return 1;
+
+            // Both unpinned → apply group sort key
+            int keyA = sortKey(getFile(a), sortedGroups, defaultOrder);
+            int keyB = sortKey(getFile(b), sortedGroups, defaultOrder);
+            if (keyA != keyB) return Integer.compare(keyA, keyB);
+
+            // Same group → alphabetical by filename
+            return String.CASE_INSENSITIVE_ORDER.compare(getFileName(a), getFileName(b));
+        });
+
+        LOG.info("TabReorderExecutor: sorted " + unpinnedCount + " unpinned tab(s) in window.");
+        return true;
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private static int sortKey(@Nullable VirtualFile file,
+                                @NotNull List<TabGroup> sortedGroups,
+                                int defaultOrder) {
+        if (file == null) return defaultOrder;
+        for (TabGroup group : sortedGroups) {
+            if (TabGroupMatcher.matches(file, group)) return group.getOrder();
+        }
+        return defaultOrder;
+    }
+
+    private static @Nullable VirtualFile getFile(@NotNull TabInfo tabInfo) {
+        Object obj = tabInfo.getObject();
+        if (obj instanceof EditorComposite composite) return composite.getFile();
+        return null;
+    }
+
+    private static @NotNull String getFileName(@NotNull TabInfo tabInfo) {
+        VirtualFile file = getFile(tabInfo);
+        return file != null ? file.getName() : "";
     }
 }
-
