@@ -19,13 +19,13 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity(platformVersion)  // build target; platform module covers all IDEs at runtime
+        intellijIdea(platformVersion)   // covers IC and IU; ideaIC was dropped after 2025.2
     }
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType<JavaCompile> {
@@ -52,5 +52,10 @@ intellijPlatform {
         // "default" = stable channel; use "beta" or "eap" for pre-releases
         channels = listOf(if (version.toString().contains("-beta")) "beta" else "default")
     }
+}
+
+// Skip verifyPlugin locally — only run it in CI (GitHub Actions sets CI=true automatically)
+tasks.named("verifyPlugin") {
+    onlyIf { System.getenv("CI") == "true" }
 }
 
