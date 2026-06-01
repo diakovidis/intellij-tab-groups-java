@@ -1,6 +1,6 @@
 # Tab Groups — IntelliJ Plugin
 
-[![Build](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/actions/workflows/build.yml)
+[![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/actions/workflows/build.yml)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/releases)
 [![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2025.1%2B-orange)](https://plugins.jetbrains.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
