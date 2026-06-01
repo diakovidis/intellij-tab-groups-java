@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>com.taborganizer.intellij-tab-organizer-java</id>
+    <name>Tab Organizer</name>
+    <vendor>taborganizer</vendor>
+    <version>1.0.0</version>
+    <description><![CDATA[
+        Organizes editor tabs based on user-defined grouping rules with regex matching.
+        Right-click any editor tab and select "Reorder Tabs" to sort open tabs by your configured groups.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Settings/Preferences panel -->
+        <projectConfigurable
+                parentId="tools"
+                instance="com.diakovidis.taborganizer.settings.TabOrganizerConfigurable"
+                id="com.diakovidis.taborganizer.settings.TabOrganizerConfigurable"
+                displayName="Tab Organizer"/>
+    </extensions>
+
+    <actions>
+        <!-- Action in the editor tab popup menu -->
+        <action id="com.diakovidis.taborganizer.action.ReorderTabsAction"
+                class="com.diakovidis.taborganizer.action.ReorderTabsAction"
+                text="Reorder Tabs"
+                description="Reorder open editor tabs according to Tab Organizer rules">
+            <add-to-group group-id="EditorTabPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
+
