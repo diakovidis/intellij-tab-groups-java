@@ -2,6 +2,7 @@ package com.diakovidis.tabgroups.service;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWindow;
@@ -43,16 +44,15 @@ public final class TabReorderExecutor {
      * (useful for testing with unsaved / in-progress settings).
      * Pinned tabs are left completely untouched.
      */
-    @SuppressWarnings("UnstableApiUsage")
     public static int reorder(Project project, List<TabGroup> tabGroups) {
         if (project == null || project.isDisposed()) {
             return 0;
         }
 
         FileEditorManager editorManager = FileEditorManager.getInstance(project);
-        VirtualFile[] openFiles = editorManager.getOpenFiles();
+        List<VirtualFile> openFiles = List.of(editorManager.getOpenFiles());
 
-        if (openFiles.length == 0) {
+        if (openFiles.isEmpty()) {
             LOG.info("TabReorderExecutor: No open tabs to reorder.");
             return 0;
         }
@@ -79,9 +79,8 @@ public final class TabReorderExecutor {
         List<VirtualFile> sortedUnpinned = TabSorter.sort(unpinnedFiles, tabGroups);
 
         // Remember which file had focus (we restore it after reordering)
-        VirtualFile selectedFile = editorManager.getSelectedFiles().length > 0
-                ? editorManager.getSelectedFiles()[0]
-                : null;
+        FileEditor selectedEditor = editorManager.getSelectedEditor();
+        VirtualFile selectedFile = selectedEditor != null ? selectedEditor.getFile() : null;
 
         ApplicationManager.getApplication().invokeLater(() -> {
             // Close only unpinned tabs; pinned tabs stay put
@@ -90,11 +89,11 @@ public final class TabReorderExecutor {
             }
             // Reopen unpinned tabs in sorted order
             for (VirtualFile file : sortedUnpinned) {
-                editorManager.openFile(file, false);
+                editorManager.openFile(file, false, false);
             }
             // Restore previously active tab
             if (selectedFile != null && selectedFile.isValid()) {
-                editorManager.openFile(selectedFile, true);
+                editorManager.openFile(selectedFile, true, true);
             }
             LOG.info("TabReorderExecutor: Tabs reordered successfully.");
         });
@@ -105,13 +104,12 @@ public final class TabReorderExecutor {
     /**
      * Collects all files whose tab is currently pinned across every editor window.
      */
-    @SuppressWarnings("UnstableApiUsage")
     private static Set<VirtualFile> collectPinnedFiles(Project project) {
         Set<VirtualFile> pinned = new HashSet<>();
         try {
             FileEditorManagerEx managerEx = FileEditorManagerEx.getInstanceEx(project);
             for (EditorWindow window : managerEx.getWindows()) {
-                for (VirtualFile file : window.getFiles()) {
+                for (VirtualFile file : window.getFileList()) {
                     if (window.isFilePinned(file)) {
                         pinned.add(file);
                     }
