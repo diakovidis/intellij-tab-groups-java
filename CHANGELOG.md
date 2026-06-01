@@ -22,6 +22,6 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 - Per-project persistence via `.idea/tabGroups.xml`.
 - Compatible with IntelliJ IDEA 2025.1 and all future versions.
 
-[Unreleased]: https://github.com/YOUR_USERNAME/intellij-tab-groups-java/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/YOUR_USERNAME/intellij-tab-groups-java/releases/tag/v1.0.0
+[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/diakovidis/intellij-tab-groups-java/releases/tag/v1.0.0
 

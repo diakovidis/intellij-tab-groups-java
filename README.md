@@ -1,7 +1,7 @@
 # Tab Groups — IntelliJ Plugin
 
-[![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/releases)
+[![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
 [![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2025.1%2B-orange)](https://plugins.jetbrains.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -35,7 +35,7 @@
 
 ### Manual installation
 
-1. Download the latest `.zip` from the [Releases](https://github.com/YOUR_USERNAME/intellij-tab-groups-java/releases) page.
+1. Download the latest `.zip` from the [Releases](https://github.com/diakovidis/intellij-tab-groups-java/releases) page.
 2. Open **Settings → Plugins → ⚙ → Install Plugin from Disk…**
 3. Select the downloaded `.zip` and restart the IDE.
 
@@ -68,7 +68,7 @@ Tabs are sorted by group order; files not matching any group are placed at the e
 
 ```bash
 # Clone
-git clone https://github.com/YOUR_USERNAME/intellij-tab-groups-java.git
+git clone https://github.com/diakovidis/intellij-tab-groups-java.git
 cd intellij-tab-groups-java
 
 # Build the plugin ZIP
