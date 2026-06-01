@@ -1,6 +1,7 @@
 package com.diakovidis.taborganizer.settings;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
@@ -74,7 +75,9 @@ public class TabOrganizerSettingsPanel {
                         removeGroup();
                     }
                 })
-                .addExtraAction(new DuplicateGroupAction());
+                .addExtraAction(new DuplicateGroupAction())
+                .addExtraAction(new ExportGroupsAction())
+                .addExtraAction(new ImportGroupsAction());
 
         JPanel leftPanel = decorator.createPanel();
         leftPanel.setBorder(new TitledBorder("Tab Groups"));
@@ -295,8 +298,7 @@ public class TabOrganizerSettingsPanel {
 
     // ===== Inner action for the duplicate / copy button =====
 
-
-    private class DuplicateGroupAction extends AnActionButton {
+    private class DuplicateGroupAction extends AnAction {
 
         DuplicateGroupAction() {
             super("Duplicate", "Duplicate the selected tab group", AllIcons.Actions.Copy);
@@ -308,8 +310,50 @@ public class TabOrganizerSettingsPanel {
         }
 
         @Override
-        public void updateButton(@NotNull AnActionEvent e) {
+        public void update(@NotNull AnActionEvent e) {
             e.getPresentation().setEnabled(groupList.getSelectedIndex() >= 0);
+        }
+    }
+
+    // ===== Inner action for Export =====
+
+    private class ExportGroupsAction extends AnAction {
+
+        ExportGroupsAction() {
+            super("Export", "Export all tab groups to a JSON file", AllIcons.Actions.Upload);
+        }
+
+        @Override
+        public void actionPerformed(@NotNull AnActionEvent e) {
+            saveCurrentGroupDetails();
+            TabGroupsPorter.export(new java.util.ArrayList<>(tabGroups), mainPanel);
+        }
+
+        @Override
+        public void update(@NotNull AnActionEvent e) {
+            e.getPresentation().setEnabled(!tabGroups.isEmpty());
+        }
+    }
+
+    // ===== Inner action for Import =====
+
+    private class ImportGroupsAction extends AnAction {
+
+        ImportGroupsAction() {
+            super("Import", "Import tab groups from a JSON file (replaces current configuration)", AllIcons.Actions.Download);
+        }
+
+        @Override
+        public void actionPerformed(@NotNull AnActionEvent e) {
+            java.util.List<TabGroup> imported = TabGroupsPorter.importGroups(mainPanel);
+            if (imported != null) {
+                setTabGroups(imported);
+            }
+        }
+
+        @Override
+        public void update(@NotNull AnActionEvent e) {
+            e.getPresentation().setEnabled(true); // always available
         }
     }
 }
