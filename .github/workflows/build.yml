@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  # Allow triggering manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & verify plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Java 17 ───────────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # ── 3. Gradle cache ──────────────────────────────────────────────────────
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' }}
+
+      # ── 4. Build ─────────────────────────────────────────────────────────────
+      - name: Build plugin
+        run: ./gradlew buildPlugin --no-daemon
+
+      # ── 5. Run tests ─────────────────────────────────────────────────────────
+      - name: Run tests
+        run: ./gradlew test --no-daemon
+
+      # ── 6. Verify plugin (IntelliJ plugin verifier) ───────────────────────────
+      - name: Verify plugin
+        run: ./gradlew verifyPlugin --no-daemon
+
+      # ── 7. Upload artifact ───────────────────────────────────────────────────
+      - name: Upload plugin ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: intellij-tab-groups-plugin
+          path: build/distributions/*.zip
+          retention-days: 14
+
