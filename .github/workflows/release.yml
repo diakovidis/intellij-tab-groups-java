@@ -49,8 +49,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── (Optional) Publish to JetBrains Marketplace ───────────────────────
-      # Uncomment the step below and add PUBLISH_TOKEN to your repo secrets
-      # (Settings → Secrets → Actions) once your plugin is approved.
+      # Add PUBLISH_TOKEN to your repo secrets (Settings → Secrets → Actions)
+      # once your plugin is approved on the Marketplace.
       #
       # - name: Publish to JetBrains Marketplace
       #   run: ./gradlew publishPlugin --no-daemon

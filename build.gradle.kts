@@ -19,8 +19,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdea(platformVersion)
-        bundledPlugin("com.intellij.java")
+        intellijIdeaCommunity(platformVersion)  // build target; platform module covers all IDEs at runtime
     }
 }
 
@@ -46,6 +45,12 @@ intellijPlatform {
         ides {
             recommended()   // verifies against the IDE versions JetBrains recommends for the plugin's since/until range
         }
+    }
+
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+        // "default" = stable channel; use "beta" or "eap" for pre-releases
+        channels = listOf(if (version.toString().contains("-beta")) "beta" else "default")
     }
 }
 
