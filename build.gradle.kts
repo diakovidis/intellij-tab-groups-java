@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.tabgroups"
-version = "1.0.0"
+version = "1.1.0"
 
 // Set via -PplatformVersion=2026.1 on the command line, or edit the default here.
 // Build against the OLDEST version you want to support for broadest compatibility.
