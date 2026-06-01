@@ -8,6 +8,9 @@
         Right-click any editor tab and select "Reorder Tabs" to sort open tabs by your configured groups.
     ]]></description>
 
+    <!-- since-build="251" = 2025.1, no until-build = compatible with all future versions -->
+    <idea-version since-build="251"/>
+
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">

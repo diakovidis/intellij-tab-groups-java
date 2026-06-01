@@ -6,6 +6,10 @@ plugins {
 group = "com.taborganizer"
 version = "1.0.0"
 
+// Set via -PplatformVersion=2026.1 on the command line, or edit the default here.
+// Build against the OLDEST version you want to support for broadest compatibility.
+val platformVersion: String by project.extra { project.findProperty("platformVersion") as String? ?: "2025.1" }
+
 repositories {
     mavenCentral()
     intellijPlatform {
@@ -15,7 +19,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdea("2026.1")
+        intellijIdea(platformVersion)
         bundledPlugin("com.intellij.java")
     }
 }
@@ -27,5 +31,15 @@ java {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            // 251 = 2025.1, leaving untilBuild open means "all future versions"
+            sinceBuild = "251"
+            untilBuild = provider { null }   // no upper limit → works on 2025 and 2026
+        }
+    }
 }
 
