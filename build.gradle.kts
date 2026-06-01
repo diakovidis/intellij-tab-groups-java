@@ -41,5 +41,11 @@ intellijPlatform {
             untilBuild = provider { null }   // no upper limit → works on 2025 and 2026
         }
     }
+
+    pluginVerification {
+        ides {
+            recommended()   // verifies against the IDE versions JetBrains recommends for the plugin's since/until range
+        }
+    }
 }
 
