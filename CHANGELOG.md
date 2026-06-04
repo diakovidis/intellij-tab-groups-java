@@ -12,16 +12,52 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ---
 
+## [1.1.1] — 2026-06-04
+
+### Improved
+- **Settings panel** redesigned: tab groups are now displayed in a two-column table (Order | Name) instead of a plain list.
+- Table is always sorted by the **Order** column for clarity.
+- **Order values** are now restricted to 0 and positive integers only.
+- New groups and duplicated groups are automatically assigned the next available order number (placed at the bottom).
+- Move Up / Move Down correctly swaps both list position and order values between adjacent groups.
+
+### Fixed
+- Moving a group up or down in settings no longer briefly flashes the old value before updating.
+
+---
+
+## [1.1.0] — 2026-06-03
+
+### Added
+- **Auto-sort on file open**: newly opened tabs are automatically placed at their correct group position without any user action.
+- Plugin icon (`pluginIcon.svg` / `pluginIcon_dark.svg`) added for light and dark themes.
+- Cross-IDE compatibility: removed dependency on `com.intellij.java`, the plugin now works in **all JetBrains IDEs** (PhpStorm, PyCharm, WebStorm, Rider, GoLand, etc.).
+
+### Improved
+- Tab sorting now uses `JBTabsImpl.sortTabs()` — the same mechanism as drag-and-drop — resulting in **zero flicker** and preserved editor scroll positions (no more close/reopen).
+- Newly opened tabs are placed in-place without disturbing other tabs.
+
+### Fixed
+- Drag-and-drop between tab rows in multi-row tab mode no longer triggers an unwanted re-sort that reverts the user's manual arrangement.
+- Deprecated IntelliJ APIs replaced throughout (`getOpenFiles`, `getSelectedFiles`, `openFile`, `getFiles`, `window.getFiles`).
+
+---
+
 ## [1.0.0] — 2026-06-01
 
 ### Added
 - **Group and Sort Tabs** action in the editor tab context menu.
-- Named tab groups with regex-based file matching.
-- Drag-and-drop ordering of groups in the settings panel.
+- Named tab groups with regex-based file matching (regex and glob syntax both supported).
+- Configurable sort order per group.
 - Import / Export of group configurations to/from JSON.
 - Per-project persistence via `.idea/tabGroups.xml`.
+- Pinned tabs are never moved.
 - Compatible with IntelliJ IDEA 2025.1 and all future versions.
 
-[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.0.0...HEAD
+---
+
+[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/diakovidis/intellij-tab-groups-java/releases/tag/v1.0.0
 

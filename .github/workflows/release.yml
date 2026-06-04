@@ -39,12 +39,25 @@ jobs:
       - name: Verify plugin
         run: ./gradlew verifyPlugin --no-daemon
 
+      # ── Extract changelog section for this tag ─────────────────────────────
+      # Strips the leading "v" (v1.1.1 → 1.1.1), finds the ## [1.1.1] block,
+      # and writes it to release-notes.md for use by the GitHub Release step.
+      - name: Extract release notes from CHANGELOG.md
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Extract content between this version header and the next ## [ line
+          awk "/^## \[$VERSION\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md \
+            > release-notes.md
+          echo "Extracted release notes for $VERSION:"
+          cat release-notes.md
+
       # ── Create a GitHub Release and attach the ZIP ─────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: build/distributions/*.zip
-          generate_release_notes: true
+          body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
