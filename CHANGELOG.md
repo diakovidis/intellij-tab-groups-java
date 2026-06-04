@@ -12,6 +12,17 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ---
 
+## [1.1.2] — 2026-06-04
+
+### Fixed
+- Drag-and-drop between tab rows in multi-row tab mode no longer triggers a re-sort when the drag takes more than one EDT cycle. Replaced `invokeLater`-based detection with a **10-second timestamp window**: any file closed within 10 seconds that immediately reopens is treated as a D&D move and placement is skipped.
+
+### Improved
+- Release changelog notes are now **automatically extracted from `CHANGELOG.md`** at build time and injected into the JetBrains Marketplace "What's new" field and the in-IDE plugin update dialog — no manual copy-paste needed for future releases.
+- GitHub Release body is also automatically populated from the matching `CHANGELOG.md` section via the CI workflow.
+
+---
+
 ## [1.1.1] — 2026-06-04
 
 ### Improved
@@ -56,7 +67,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ---
 
-[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/diakovidis/intellij-tab-groups-java/releases/tag/v1.0.0

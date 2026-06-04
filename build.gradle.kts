@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.tabgroups"
-version = "1.1.1"
+version = "1.1.2"
 
 /**
  * Reads CHANGELOG.md and extracts the section for the current [version],
