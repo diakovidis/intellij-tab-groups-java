@@ -75,6 +75,18 @@ public class TabGroupsSettingsPanel {
                         removeGroup();
                     }
                 })
+                .setMoveUpAction(new AnActionButtonRunnable() {
+                    @Override
+                    public void run(AnActionButton button) {
+                        moveGroup(-1);
+                    }
+                })
+                .setMoveDownAction(new AnActionButtonRunnable() {
+                    @Override
+                    public void run(AnActionButton button) {
+                        moveGroup(1);
+                    }
+                })
                 .addExtraAction(new DuplicateGroupAction())
                 .addExtraAction(new ExportGroupsAction())
                 .addExtraAction(new ImportGroupsAction());
@@ -167,6 +179,27 @@ public class TabGroupsSettingsPanel {
                 refreshGroupListAndSelect(-1);
             }
         }
+    }
+
+    /**
+     * Moves the currently selected group up ({@code delta=-1}) or down ({@code delta=+1}).
+     * Swaps both the backing {@code tabGroups} list AND the {@code groupListModel} atomically
+     * so they never diverge.
+     */
+    private void moveGroup(int delta) {
+        int idx = groupList.getSelectedIndex();
+        int target = idx + delta;
+        if (idx < 0 || target < 0 || target >= tabGroups.size()) return;
+
+        saveCurrentGroupDetails();
+
+        // Swap in the backing list
+        TabGroup tmp = tabGroups.get(idx);
+        tabGroups.set(idx, tabGroups.get(target));
+        tabGroups.set(target, tmp);
+
+        // Rebuild the list model and move selection — all under isUpdating guard
+        refreshGroupListAndSelect(target);
     }
 
     private void duplicateGroup() {

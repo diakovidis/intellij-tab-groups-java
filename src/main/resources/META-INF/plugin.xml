@@ -6,6 +6,7 @@
     <description><![CDATA[
         Organizes editor tabs based on user-defined grouping rules with regex matching.
         Right-click any editor tab and select "Group and Sort Tabs" to sort open tabs by your configured groups.
+        Tabs are also sorted automatically whenever a new file is opened.
     ]]></description>
 
     <!-- since-build="251" = 2025.1, no until-build = compatible with all future versions -->
@@ -22,6 +23,12 @@
                 displayName="Tab Groups"/>
     </extensions>
 
+
+    <!-- Auto-sort tabs whenever a new file is opened -->
+    <projectListeners>
+        <listener class="com.diakovidis.tabgroups.listener.TabAutoSorterListener"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
 
     <actions>
         <!-- Action in the editor tab popup menu -->
