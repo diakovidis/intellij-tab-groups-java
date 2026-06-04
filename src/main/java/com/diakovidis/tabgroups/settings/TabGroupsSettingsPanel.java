@@ -6,86 +6,77 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.components.JBList;
+import com.intellij.ui.table.JBTable;
 import com.diakovidis.tabgroups.model.TabGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
  * Swing panel for editing Tab Groups settings.
- * Provides a list of Tab Groups on the left, and group details (name, order, regex) on the right.
+ * Left side: a two-column table (Order | Name) always sorted by order.
+ * Right side: detail fields (name, order ≥ 0, regex).
  */
 public class TabGroupsSettingsPanel {
 
     private final JPanel mainPanel;
 
-    // Left side: group list
-    private final DefaultListModel<TabGroup> groupListModel;
-    private final JBList<TabGroup> groupList;
+    // Left side: group table
+    private final DefaultTableModel tableModel;
+    private final JBTable groupTable;
 
     // Right side: detail editing
     private final JTextField nameField;
     private final JSpinner orderSpinner;
     private final JTextField regexField;
 
-    // Data
+    // Data — always kept sorted by order
     private final List<TabGroup> tabGroups = new ArrayList<>();
     private int currentIndex = -1;
 
-    /** Guard flag to suppress selection listener during programmatic list updates. */
+    /** Guard flag to suppress selection listener during programmatic table updates. */
     private boolean isUpdating = false;
 
     public TabGroupsSettingsPanel() {
         mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // ===== Left panel: group list with IntelliJ ToolbarDecorator (+, -, copy) =====
-        groupListModel = new DefaultListModel<>();
-        groupList = new JBList<>(groupListModel);
-        groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        groupList.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-                                                          boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof TabGroup group) {
-                    setText(group.getName().isEmpty() ? "<unnamed>" : group.getName());
-                }
-                return this;
+        // ===== Left panel: group table =====
+        tableModel = new DefaultTableModel(new Object[]{"Order", "Name"}, 0) {
+            @Override public boolean isCellEditable(int row, int col) { return false; }
+            @Override public Class<?> getColumnClass(int col) {
+                return col == 0 ? Integer.class : String.class;
             }
-        });
+        };
+        groupTable = new JBTable(tableModel);
+        groupTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        groupTable.setShowGrid(false);
+        groupTable.setRowSelectionAllowed(true);
+        groupTable.getTableHeader().setReorderingAllowed(false);
+        groupTable.getColumnModel().getColumn(0).setPreferredWidth(55);
+        groupTable.getColumnModel().getColumn(0).setMaxWidth(70);
+        groupTable.getColumnModel().getColumn(1).setPreferredWidth(145);
 
-        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(groupList)
+        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(groupTable)
                 .setAddAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton button) {
-                        addGroup();
-                    }
+                    @Override public void run(AnActionButton button) { addGroup(); }
                 })
                 .setRemoveAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton button) {
-                        removeGroup();
-                    }
+                    @Override public void run(AnActionButton button) { removeGroup(); }
                 })
                 .setMoveUpAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton button) {
-                        moveGroup(-1);
-                    }
+                    @Override public void run(AnActionButton button) { moveGroup(-1); }
                 })
                 .setMoveDownAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton button) {
-                        moveGroup(1);
-                    }
+                    @Override public void run(AnActionButton button) { moveGroup(1); }
                 })
                 .addExtraAction(new DuplicateGroupAction())
                 .addExtraAction(new ExportGroupsAction())
@@ -93,13 +84,12 @@ public class TabGroupsSettingsPanel {
 
         JPanel leftPanel = decorator.createPanel();
         leftPanel.setBorder(new TitledBorder("Tab Groups"));
-        leftPanel.setPreferredSize(new Dimension(200, 0));
+        leftPanel.setPreferredSize(new Dimension(220, 0));
 
         // ===== Right panel: detail editing =====
         JPanel rightPanel = new JPanel(new BorderLayout(5, 10));
         rightPanel.setBorder(new TitledBorder("Group Details"));
 
-        // Detail fields: name, order, regex
         JPanel detailPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -115,7 +105,8 @@ public class TabGroupsSettingsPanel {
         gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
         detailPanel.add(new JLabel("Order:"), gbc);
 
-        orderSpinner = new JSpinner(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+        // min = 0, only non-negative values allowed
+        orderSpinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         gbc.gridx = 1; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
         detailPanel.add(orderSpinner, gbc);
 
@@ -132,146 +123,134 @@ public class TabGroupsSettingsPanel {
 
         rightPanel.add(detailPanel, BorderLayout.NORTH);
 
-        // ===== Assemble main panel =====
+        // ===== Assemble =====
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(rightPanel, BorderLayout.CENTER);
 
-        // ===== Wire up listeners =====
-
-        // When selecting a group in the list, save current and load selected
-        groupList.addListSelectionListener(e -> {
+        // ===== Listeners =====
+        groupTable.getSelectionModel().addListSelectionListener(e -> {
             if (e.getValueIsAdjusting() || isUpdating) return;
             saveCurrentGroupDetails();
-            int selected = groupList.getSelectedIndex();
+            int selected = groupTable.getSelectedRow();
             loadGroupDetails(selected);
         });
 
-        // Validate regex
         validateBtn.addActionListener(e -> validateRegex());
-
-        // Apply name/order/regex changes on Enter / spinner change
-        // Guard with isUpdating so that programmatic changes in loadGroupDetails() don't trigger saves.
         nameField.addActionListener(e -> { if (!isUpdating) saveCurrentGroupDetails(); });
         orderSpinner.addChangeListener(e -> { if (!isUpdating) saveCurrentGroupDetails(); });
         regexField.addActionListener(e -> { if (!isUpdating) saveCurrentGroupDetails(); });
 
-        // Initially disable details
         setDetailsEnabled(false);
     }
 
-    // ===== Add / Remove / Duplicate actions =====
+    // ===== Add / Remove / Move / Duplicate =====
 
     private void addGroup() {
         saveCurrentGroupDetails();
-        TabGroup newGroup = new TabGroup("New Group", tabGroups.size(), "");
+        // New group gets order = max existing order + 1 (lands at the bottom)
+        int nextOrder = tabGroups.stream().mapToInt(TabGroup::getOrder).max().orElse(-1) + 1;
+        TabGroup newGroup = new TabGroup("New Group", nextOrder, "");
         tabGroups.add(newGroup);
-        refreshGroupListAndSelect(tabGroups.size() - 1);
+        refreshTableAndSelect(tabGroups.size() - 1); // sort will place it last
     }
 
     private void removeGroup() {
-        int idx = groupList.getSelectedIndex();
+        int idx = groupTable.getSelectedRow();
         if (idx >= 0 && idx < tabGroups.size()) {
             tabGroups.remove(idx);
             currentIndex = -1;
-            if (!tabGroups.isEmpty()) {
-                refreshGroupListAndSelect(Math.min(idx, tabGroups.size() - 1));
-            } else {
-                refreshGroupListAndSelect(-1);
-            }
+            refreshTableAndSelect(tabGroups.isEmpty() ? -1 : Math.min(idx, tabGroups.size() - 1));
         }
     }
 
     /**
-     * Moves the currently selected group up ({@code delta=-1}) or down ({@code delta=+1}).
-     * Swaps both the backing {@code tabGroups} list AND the {@code groupListModel} atomically
-     * so they never diverge.
+     * Moves the selected group up ({@code delta=-1}) or down ({@code delta=+1})
+     * by swapping the order values of the two adjacent groups, then re-sorting.
      */
     private void moveGroup(int delta) {
-        int idx = groupList.getSelectedIndex();
+        int idx = groupTable.getSelectedRow();
         int target = idx + delta;
         if (idx < 0 || target < 0 || target >= tabGroups.size()) return;
 
         saveCurrentGroupDetails();
 
-        // Swap in the backing list
+        // Swap list positions
         TabGroup tmp = tabGroups.get(idx);
         tabGroups.set(idx, tabGroups.get(target));
         tabGroups.set(target, tmp);
 
-        // Swap the order values so the sort key follows the new position
-        int orderA = tabGroups.get(idx).getOrder();   // was target's order
-        int orderB = tabGroups.get(target).getOrder(); // was idx's order
-        tabGroups.get(idx).setOrder(orderB);
-        tabGroups.get(target).setOrder(orderA);
+        // Swap order values so the sort order reflects the new positions
+        int orderIdx    = tabGroups.get(idx).getOrder();    // was target's order
+        int orderTarget = tabGroups.get(target).getOrder(); // was idx's order
+        tabGroups.get(idx).setOrder(orderTarget);
+        tabGroups.get(target).setOrder(orderIdx);
 
-        // Rebuild the list model and move selection — all under isUpdating guard
-        refreshGroupListAndSelect(target);
+        // After sort the moved group lands at `target`
+        refreshTableAndSelect(target);
     }
 
     private void duplicateGroup() {
-        int idx = groupList.getSelectedIndex();
+        int idx = groupTable.getSelectedRow();
         if (idx >= 0 && idx < tabGroups.size()) {
             saveCurrentGroupDetails();
             TabGroup original = tabGroups.get(idx);
             TabGroup duplicate = original.copy();
             duplicate.setName(original.getName() + " (copy)");
-            tabGroups.add(idx + 1, duplicate);
-            refreshGroupListAndSelect(idx + 1);
+            // Give duplicate order = max + 1 so it lands at the end
+            int nextOrder = tabGroups.stream().mapToInt(TabGroup::getOrder).max().orElse(-1) + 1;
+            duplicate.setOrder(nextOrder);
+            tabGroups.add(duplicate);
+            refreshTableAndSelect(tabGroups.size() - 1);
         }
     }
 
-    public JPanel getPanel() {
-        return mainPanel;
-    }
+    // ===== Public API =====
 
-    /**
-     * Returns the tab groups as currently configured in the UI.
-     */
+    public JPanel getPanel() { return mainPanel; }
+
     public List<TabGroup> getTabGroups() {
         saveCurrentGroupDetails();
         List<TabGroup> result = new ArrayList<>();
-        for (TabGroup g : tabGroups) {
-            result.add(g.copy());
-        }
+        for (TabGroup g : tabGroups) result.add(g.copy());
         return result;
     }
 
-    /**
-     * Sets the tab groups to display in the UI.
-     */
     public void setTabGroups(List<TabGroup> groups) {
         currentIndex = -1;
         tabGroups.clear();
-        for (TabGroup g : groups) {
-            tabGroups.add(g.copy());
-        }
-        if (!tabGroups.isEmpty()) {
-            refreshGroupListAndSelect(0);
-        } else {
-            refreshGroupListAndSelect(-1);
-        }
+        for (TabGroup g : groups) tabGroups.add(g.copy());
+        refreshTableAndSelect(tabGroups.isEmpty() ? -1 : 0);
     }
 
+    // ===== Internal helpers =====
+
     /**
-     * Refreshes the list model and selects the given index, suppressing
-     * intermediate selection events to avoid the overwrite bug.
+     * Sorts {@code tabGroups} by order, rebuilds the table model, and selects
+     * the given row — all under the {@code isUpdating} guard.
      */
-    private void refreshGroupListAndSelect(int selectIndex) {
+    private void refreshTableAndSelect(int selectIndex) {
+        // Always keep the list sorted by order
+        tabGroups.sort(Comparator.comparingInt(TabGroup::getOrder));
+
         isUpdating = true;
         try {
-            groupListModel.clear();
+            tableModel.setRowCount(0);
             for (TabGroup g : tabGroups) {
-                groupListModel.addElement(g);
+                tableModel.addRow(new Object[]{
+                    g.getOrder(),
+                    g.getName().isEmpty() ? "<unnamed>" : g.getName()
+                });
             }
             if (selectIndex >= 0 && selectIndex < tabGroups.size()) {
-                groupList.setSelectedIndex(selectIndex);
+                groupTable.setRowSelectionInterval(selectIndex, selectIndex);
+                // Scroll the selected row into view
+                groupTable.scrollRectToVisible(groupTable.getCellRect(selectIndex, 0, true));
             } else {
-                groupList.clearSelection();
+                groupTable.clearSelection();
             }
         } finally {
             isUpdating = false;
         }
-        // Now manually load the selected group details
         loadGroupDetails(selectIndex);
     }
 
@@ -281,12 +260,14 @@ public class TabGroupsSettingsPanel {
             group.setName(nameField.getText().trim());
             group.setOrder((Integer) orderSpinner.getValue());
             group.setRegex(regexField.getText().trim());
-            // Update list display — guard with isUpdating to prevent the set()
-            // from firing a selection event that re-enters save/load and overwrites other groups.
-            if (currentIndex < groupListModel.size()) {
+            // Update table row in-place (no resort — user is still editing)
+            if (currentIndex < tableModel.getRowCount()) {
                 isUpdating = true;
                 try {
-                    groupListModel.set(currentIndex, group);
+                    tableModel.setValueAt(group.getOrder(), currentIndex, 0);
+                    tableModel.setValueAt(
+                        group.getName().isEmpty() ? "<unnamed>" : group.getName(),
+                        currentIndex, 1);
                 } finally {
                     isUpdating = false;
                 }
@@ -335,64 +316,41 @@ public class TabGroupsSettingsPanel {
         }
     }
 
-    // ===== Inner action for the duplicate / copy button =====
+    // ===== Inner actions =====
 
     private class DuplicateGroupAction extends AnAction {
-
         DuplicateGroupAction() {
             super("Duplicate", "Duplicate the selected tab group", AllIcons.Actions.Copy);
         }
-
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
-            duplicateGroup();
-        }
-
-        @Override
-        public void update(@NotNull AnActionEvent e) {
-            e.getPresentation().setEnabled(groupList.getSelectedIndex() >= 0);
+        @Override public void actionPerformed(@NotNull AnActionEvent e) { duplicateGroup(); }
+        @Override public void update(@NotNull AnActionEvent e) {
+            e.getPresentation().setEnabled(groupTable.getSelectedRow() >= 0);
         }
     }
 
-    // ===== Inner action for Export =====
-
     private class ExportGroupsAction extends AnAction {
-
         ExportGroupsAction() {
             super("Export", "Export all tab groups to a JSON file", AllIcons.Actions.Upload);
         }
-
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        @Override public void actionPerformed(@NotNull AnActionEvent e) {
             saveCurrentGroupDetails();
-            TabGroupsPorter.export(new java.util.ArrayList<>(tabGroups), mainPanel);
+            TabGroupsPorter.export(new ArrayList<>(tabGroups), mainPanel);
         }
-
-        @Override
-        public void update(@NotNull AnActionEvent e) {
+        @Override public void update(@NotNull AnActionEvent e) {
             e.getPresentation().setEnabled(!tabGroups.isEmpty());
         }
     }
 
-    // ===== Inner action for Import =====
-
     private class ImportGroupsAction extends AnAction {
-
         ImportGroupsAction() {
             super("Import", "Import tab groups from a JSON file (replaces current configuration)", AllIcons.Actions.Download);
         }
-
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
-            java.util.List<TabGroup> imported = TabGroupsPorter.importGroups(mainPanel);
-            if (imported != null) {
-                setTabGroups(imported);
-            }
+        @Override public void actionPerformed(@NotNull AnActionEvent e) {
+            List<TabGroup> imported = TabGroupsPorter.importGroups(mainPanel);
+            if (imported != null) setTabGroups(imported);
         }
-
-        @Override
-        public void update(@NotNull AnActionEvent e) {
-            e.getPresentation().setEnabled(true); // always available
+        @Override public void update(@NotNull AnActionEvent e) {
+            e.getPresentation().setEnabled(true);
         }
     }
 }
