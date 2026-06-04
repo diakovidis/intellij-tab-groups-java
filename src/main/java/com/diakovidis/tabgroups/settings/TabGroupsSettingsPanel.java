@@ -198,6 +198,12 @@ public class TabGroupsSettingsPanel {
         tabGroups.set(idx, tabGroups.get(target));
         tabGroups.set(target, tmp);
 
+        // Swap the order values so the sort key follows the new position
+        int orderA = tabGroups.get(idx).getOrder();   // was target's order
+        int orderB = tabGroups.get(target).getOrder(); // was idx's order
+        tabGroups.get(idx).setOrder(orderB);
+        tabGroups.get(target).setOrder(orderA);
+
         // Rebuild the list model and move selection — all under isUpdating guard
         refreshGroupListAndSelect(target);
     }
