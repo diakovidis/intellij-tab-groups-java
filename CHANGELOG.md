@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **Tab Groups** are documented here.  
+All notable changes to **Tab Order** are documented here.  
 This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
@@ -10,7 +10,19 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 ### Added
 - Nothing yet.
 
----
+## [1.1.3] — 2026-06-05
+
+### Added
+- **Auto-sort on file open**: newly opened tabs are automatically placed at their correct group position without any user action.
+- **Settings panel** redesigned: tab groups are now displayed in a two-column table (Order | Name) instead of a plain list.
+- Table is always sorted by the **Order** column for clarity.
+- New groups and duplicated groups are automatically assigned the next available order number (placed at the bottom).
+- Move Up / Move Down correctly swaps both list position and order values between adjacent groups.
+- Added Icons for light and dark themes.
+
+### Improved 
+- Tab sorting now uses the same mechanism as drag-and-drop — resulting in **zero flicker** and preserved editor scroll positions (no more close/reopen).
+
 
 ## [1.1.2] — 2026-06-04
 
