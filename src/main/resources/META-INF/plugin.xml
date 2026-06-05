@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>com.tabgroups.intellij-tab-groups-java</id>
-    <name>Tab Groups</name>
+    <name>TabOrder</name>
     <vendor>tabgroups</vendor>
     <version>1.1.0</version>
     <description><![CDATA[
-        Organizes editor tabs based on user-defined grouping rules with regex matching.
-        Right-click any editor tab and select "Group and Sort Tabs" to sort open tabs by your configured groups.
+        Orders editor tabs based on user-defined grouping rules with regex matching.
+        Right-click any editor tab and select "Order Tabs" to sort open tabs by your configured groups.
         Tabs are also sorted automatically whenever a new file is opened.
     ]]></description>
 
@@ -20,7 +20,7 @@
                 parentId="tools"
                 instance="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
                 id="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
-                displayName="Tab Groups"/>
+                displayName="TabOrder"/>
     </extensions>
 
 
@@ -34,8 +34,8 @@
         <!-- Action in the editor tab popup menu -->
         <action id="com.diakovidis.tabgroups.action.ReorderTabsAction"
                 class="com.diakovidis.tabgroups.action.ReorderTabsAction"
-                text="Group and Sort Tabs"
-                description="Reorder open editor tabs according to Tab Groups rules">
+                text="Order Tabs"
+                description="Reorder open editor tabs according to TabOrder rules">
             <add-to-group group-id="EditorTabPopupMenu" anchor="first"/>
         </action>
     </actions>

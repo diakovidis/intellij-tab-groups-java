@@ -8,8 +8,8 @@ import com.diakovidis.tabgroups.service.TabReorderExecutor;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Action that reorders all currently open editor tabs based on Tab Groups rules.
- * Available from the editor tab right-click popup menu as "Group and Sort Tabs".
+ * Action that reorders all currently open editor tabs based on TabOrder rules.
+ * Available from the editor tab right-click popup menu as "Order Tabs".
  */
 public class ReorderTabsAction extends AnAction {
 

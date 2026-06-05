@@ -1,7 +1,7 @@
-# Tab Groups — IntelliJ Plugin
+# TabOrder — IntelliJ Plugin
 
 [![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
+[![Version](https://img.shields.io/badge/version-1.1.2-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
 [![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2025.1%2B-orange)](https://plugins.jetbrains.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -13,9 +13,11 @@
 
 - **Named tab groups** — define as many groups as you need, each with a display name and sort order.
 - **Regex matching** — each group targets files whose paths match a regular expression (e.g. `.*Test\.java$` for test files).
-- **One-click reorder** — right-click any editor tab and choose **Group Tabs** to instantly Group and Sort all open, unpinned tabs.
+- **One-click reorder** — right-click any editor tab and choose **Order Tabs** to instantly sort all open, unpinned tabs.
+- **Auto-sort on open** — newly opened tabs are automatically placed at their correct group position.
 - **Per-project settings** — groups are stored in `.idea/tabGroups.xml` and travel with your project.
 - **Import / Export** — share group configurations across machines or team members via JSON.
+- Works in **all JetBrains IDEs** — IntelliJ IDEA, PhpStorm, PyCharm, WebStorm, Rider, GoLand, and more.
 
 ---
 
@@ -27,10 +29,10 @@
 
 ## 🚀 Installation
 
-### From the JetBrains Marketplace _(coming soon)_
+### From the JetBrains Marketplace
 
 1. Open **Settings → Plugins → Marketplace**.
-2. Search for **Tab Groups**.
+2. Search for **TabOrder**.
 3. Click **Install** and restart the IDE.
 
 ### Manual installation
@@ -45,7 +47,7 @@
 
 ### Configure groups
 
-1. Go to **Settings → Tools → Tab Groups**.
+1. Go to **Settings → Tools → TabOrder**.
 2. Click **+** to add a new group.
 3. Fill in:
    | Field | Description |
@@ -55,16 +57,16 @@
    | **Regex** | File-path pattern to match (e.g. `.*Test\.java$`) |
 4. Click **Apply / OK**.
 
-### Group and Sort Tabs
+### Order Tabs
 
-Right-click any editor tab → **Group and Sort Tabs**.  
+Right-click any editor tab → **Order Tabs**.  
 Tabs are sorted by group order; files not matching any group are placed at the end.
 
 ---
 
 ## 🏗️ Building from source
 
-**Requirements:** JDK 17+, internet access (Gradle downloads the IDE).
+**Requirements:** JDK 21+, internet access (Gradle downloads the IDE).
 
 ```bash
 # Clone
@@ -98,6 +100,7 @@ The distributable ZIP is generated at `build/distributions/`.
 ```
 src/main/java/com/diakovidis/tabgroups/
 ├── action/          # ReorderTabsAction — entry point from the tab context menu
+├── listener/        # TabAutoSorterListener — auto-sorts on file open
 ├── model/           # TabGroup — domain model
 ├── service/         # TabGroupMatcher, TabReorderExecutor, TabSorter — core logic
 └── settings/        # TabGroupsConfigurable, TabGroupsSettings, TabGroupsSettingsPanel, TabGroupsPorter
@@ -119,4 +122,3 @@ Please make sure `./gradlew buildPlugin` succeeds before submitting a PR.
 ## 📄 License
 
 [MIT](LICENSE) © diakovidis
-
