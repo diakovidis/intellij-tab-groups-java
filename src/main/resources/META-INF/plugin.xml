@@ -2,15 +2,43 @@
     <id>com.tabgroups.intellij-tab-groups-java</id>
     <name>TabOrder</name>
     <vendor>tabgroups</vendor>
-    <version>1.1.0</version>
+    <version>1.1.3</version>
     <description><![CDATA[
-        Orders editor tabs based on user-defined grouping rules with regex matching.
-        Right-click any editor tab and select "Order Tabs" to sort open tabs by your configured groups.
-        Tabs are also sorted automatically whenever a new file is opened.
+        <h2>TabOrder — Keep your editor tabs organized, automatically</h2>
+
+        <p>
+            TabOrder sorts your IntelliJ editor tabs into named groups using regex rules —
+            so you always know where each file lives, without manually dragging tabs around.
+        </p>
+
+        <h3>&#10024; Features</h3>
+        <ul>
+            <li>&#128193; <b>Named groups</b> — define as many groups as you need, each with a name and sort order</li>
+            <li>&#128269; <b>Regex matching</b> — target files by path pattern (e.g. <code>.*Test\.java$</code>)</li>
+            <li>&#9889; <b>Auto-sort on open</b> — new tabs snap into the correct position the moment a file opens</li>
+            <li>&#128433; <b>One-click reorder</b> — right-click any tab &#8594; <b>Order Tabs</b>, or press <b>Ctrl+Shift+Alt+O</b></li>
+            <li>&#9989; <b>Enable / disable groups</b> — toggle individual rules without deleting them</li>
+            <li>&#128230; <b>8 built-in presets</b> — Java/Maven, Spring Boot, Angular, Django, Laravel, Go, Kotlin/Android &amp; full-stack Java+Angular</li>
+            <li>&#128260; <b>Import / Export</b> — share group configs across machines or teams via JSON</li>
+            <li>&#128190; <b>Per-project persistence</b> — settings saved in <code>.idea/tabGroups.xml</code> and travel with your repo</li>
+        </ul>
+
+        <h3>&#128187; Works in all JetBrains IDEs</h3>
+        <p>
+            IntelliJ IDEA &bull; PhpStorm &bull; PyCharm &bull; WebStorm &bull;
+            Rider &bull; GoLand &bull; RubyMine &bull; DataGrip &bull; CLion
+        </p>
+
+        <h3>&#128640; Quick start</h3>
+        <ol>
+            <li>Install from <b>Settings &#8594; Plugins &#8594; Marketplace</b> (search <i>TabOrder</i>)</li>
+            <li>Open <b>Settings &#8594; Tools &#8594; TabOrder</b> and add your groups (or load a preset)</li>
+            <li>Right-click any tab &#8594; <b>Order Tabs</b> — or just open a file and it sorts itself</li>
+        </ol>
     ]]></description>
 
-    <!-- since-build="251" = 2025.1, no until-build = compatible with all future versions -->
-    <idea-version since-build="251"/>
+    <!-- since-build="231" = 2023.1, no until-build = compatible with all future versions -->
+    <idea-version since-build="231"/>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -21,8 +49,12 @@
                 instance="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
                 id="com.diakovidis.tabgroups.settings.TabGroupsConfigurable"
                 displayName="TabOrder"/>
-    </extensions>
 
+        <!-- Notification group for first-run balloon -->
+        <notificationGroup id="TabOrder"
+                           displayType="BALLOON"
+                           isLogByDefault="false"/>
+    </extensions>
 
     <!-- Auto-sort tabs whenever a new file is opened -->
     <projectListeners>
@@ -37,7 +69,7 @@
                 text="Order Tabs"
                 description="Reorder open editor tabs according to TabOrder rules">
             <add-to-group group-id="EditorTabPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift alt O"/>
         </action>
     </actions>
 </idea-plugin>
-

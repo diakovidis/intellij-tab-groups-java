@@ -1,8 +1,9 @@
 # TabOrder — IntelliJ Plugin
 
 [![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.1.2-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
-[![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2025.1%2B-orange)](https://plugins.jetbrains.com/)
+[![Version](https://img.shields.io/badge/version-1.1.3-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
+[![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2023.1%2B-orange)](https://plugins.jetbrains.com/)
+[![JetBrains Marketplace](https://img.shields.io/badge/JetBrains-Marketplace-green?logo=jetbrains)](https://plugins.jetbrains.com/plugin/com.tabgroups.intellij-tab-groups-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > Sort your IntelliJ editor tabs into named groups using regex-based rules — with per-project persistence.
@@ -17,13 +18,23 @@
 - **Auto-sort on open** — newly opened tabs are automatically placed at their correct group position.
 - **Per-project settings** — groups are stored in `.idea/tabGroups.xml` and travel with your project.
 - **Import / Export** — share group configurations across machines or team members via JSON.
-- Works in **all JetBrains IDEs** — IntelliJ IDEA, PhpStorm, PyCharm, WebStorm, Rider, GoLand, and more.
+- Works in **all JetBrains IDEs** — IntelliJ IDEA, PhpStorm, PyCharm, WebStorm, Rider, GoLand, RubyMine, DataGrip, CLion and more.
 
 ---
 
 ## 🖼️ Screenshots
 
-> _Add screenshots here once available._
+### ⚡ Auto-sort in action
+
+![Tab sorting demo](src/main/resources/sort%20tabs.gif)
+
+> Tabs snap into their configured group order the moment a new file is opened — no manual dragging required.
+
+### ⚙️ Settings panel
+
+![Settings panel](src/main/resources/settings.jpg)
+
+> Define groups with a name, sort order, and regex pattern. Enable/disable individual rules, load a built-in preset, or import/export via JSON.
 
 ---
 
