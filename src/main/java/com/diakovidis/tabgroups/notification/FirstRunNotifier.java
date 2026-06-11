@@ -11,6 +11,9 @@ import com.intellij.openapi.project.Project;
 import com.diakovidis.tabgroups.settings.TabGroupsConfigurable;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.Desktop;
+import java.net.URI;
+
 /**
  * Shows a one-time balloon notification the first time TabOrder automatically
  * sorts tabs in a project. Lets new users know the plugin is active and
@@ -22,7 +25,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class FirstRunNotifier {
 
-    private static final String PROPERTY_KEY = "taborder.v1.firstSortNotificationShown";
+    private static final String PROPERTY_KEY  = "taborder.v1.firstSortNotificationShown";
+    private static final String ISSUES_URL    = "https://github.com/diakovidis/intellij-tab-groups-java/issues";
 
     private FirstRunNotifier() {}
 
@@ -49,6 +53,15 @@ public final class FirstRunNotifier {
             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification n) {
                 n.expire();
                 ShowSettingsUtil.getInstance().showSettingsDialog(project, TabGroupsConfigurable.class);
+            }
+        });
+
+        notification.addAction(new NotificationAction("Give Feedback / Report Bug") {
+            @Override
+            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification n) {
+                try {
+                    Desktop.getDesktop().browse(new URI(ISSUES_URL));
+                } catch (Exception ignored) {}
             }
         });
 

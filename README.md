@@ -1,7 +1,7 @@
 # TabOrder — IntelliJ Plugin
 
 [![Build](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml/badge.svg)](https://github.com/diakovidis/intellij-tab-groups-java/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.1.3-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/diakovidis/intellij-tab-groups-java/releases)
 [![IntelliJ Platform](https://img.shields.io/badge/IntelliJ-2023.1%2B-orange)](https://plugins.jetbrains.com/)
 [![JetBrains Marketplace](https://img.shields.io/badge/JetBrains-Marketplace-green?logo=jetbrains)](https://plugins.jetbrains.com/plugin/com.tabgroups.intellij-tab-groups-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -73,6 +73,39 @@
 Right-click any editor tab → **Order Tabs**.  
 Tabs are sorted by group order; files not matching any group are placed at the end.
 
+### Keyboard shortcut
+
+Press **`Ctrl+Shift+Alt+O`** anywhere in the editor — no mouse required.
+
+### Load a preset
+
+Don't want to build groups from scratch? Use a built-in preset:
+
+1. Go to **Settings → Tools → TabOrder**.
+2. Click the **Load Preset** button (▶ icon) in the toolbar above the groups table.
+3. Choose one of the 8 curated presets:
+
+   | Preset | Best for |
+   |--------|----------|
+   | **Java / Maven** | Standard Maven project layout |
+   | **Java / Spring Boot** | Spring Boot layered architecture |
+   | **Java + Angular (Full-stack)** | Monorepo with Java backend + Angular frontend |
+   | **Angular / TypeScript** | Angular SPA projects |
+   | **Python / Django** | Django web apps |
+   | **PHP / Laravel** | Laravel MVC projects |
+   | **Go** | Go modules layout |
+   | **Kotlin / Android** | Android Studio / Kotlin projects |
+
+4. Click **Yes** to replace your current groups, then **Apply / OK**.
+
+> You can also **Import** your own saved preset from a JSON file using the Import button in the same toolbar.
+
+### Enable / disable groups
+
+Each group has a checkbox (✓) in the first column of the table.  
+**Uncheck** a group to temporarily exclude it from sorting — without deleting it.  
+The group stays in your list and can be re-enabled at any time.
+
 ---
 
 ## 🏗️ Building from source
@@ -98,24 +131,18 @@ The distributable ZIP is generated at `build/distributions/`.
 
 ---
 
-## 🧪 Running tests
 
-```bash
-./gradlew test
-```
+## 🐛 Feedback & Issues
 
----
+Found a bug? Have an idea for a new feature? Your feedback is what makes this plugin better.
 
-## 📁 Project structure
+👉 **[Open an issue on GitHub](https://github.com/diakovidis/intellij-tab-groups-java/issues)**
 
-```
-src/main/java/com/diakovidis/tabgroups/
-├── action/          # ReorderTabsAction — entry point from the tab context menu
-├── listener/        # TabAutoSorterListener — auto-sorts on file open
-├── model/           # TabGroup — domain model
-├── service/         # TabGroupMatcher, TabReorderExecutor, TabSorter — core logic
-└── settings/        # TabGroupsConfigurable, TabGroupsSettings, TabGroupsSettingsPanel, TabGroupsPorter
-```
+- **Bug report** — include your IDE version, OS, and steps to reproduce.
+- **Feature request** — describe the use case and why it would be useful.
+- **Question** — anything unclear in the docs or behaviour? Ask away!
+
+You can also leave a ⭐ review on the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/com.tabgroups.intellij-tab-groups-java) — it helps other developers discover the plugin.
 
 ---
 

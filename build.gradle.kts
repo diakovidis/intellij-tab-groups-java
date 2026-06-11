@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.tabgroups"
-version = "1.1.3"
+version = "2.0.0"
 
 /**
  * Reads CHANGELOG.md and extracts the section for the current [version],
@@ -94,7 +94,7 @@ intellijPlatform {
     pluginConfiguration {
         ideaVersion {
             // 251 = 2025.1, leaving untilBuild open means "all future versions"
-            sinceBuild = "251"
+            sinceBuild = "231"
             untilBuild = provider { null }   // no upper limit → works on 2025 and 2026
         }
         // Automatically populated from CHANGELOG.md for every release.

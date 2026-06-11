@@ -10,6 +10,19 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 ### Added
 - Nothing yet.
 
+---
+
+## [2.0.0] — 2026-06-11
+
+### Added
+- **Keyboard shortcut** `Ctrl+Shift+Alt+O` — trigger **Order Tabs** without touching the mouse.
+- **Enable / disable groups** — each group in the settings table now has a checkbox; unchecked groups are completely skipped during sorting and matching without being deleted.
+- **8 built-in presets** — instantly load a curated group configuration for the most popular project types: Java/Maven, Java/Spring Boot, Java+Angular (full-stack), Angular/TypeScript, Python/Django, PHP/Laravel, Go, and Kotlin/Android. Load via the **Load Preset** toolbar button in Settings.
+- **First-run notification** — a balloon notification appears the first time the plugin is activated, pointing users to Settings → Tools → TabOrder.
+
+### Improved
+- Plugin compatibility widened from IntelliJ **2025.1+** to **2023.1+** (`since-build` changed from `251` → `231`).
+
 ## [1.1.3] — 2026-06-05
 
 ### Added
@@ -79,7 +92,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ---
 
-[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.3...v2.0.0
 [1.1.3]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/diakovidis/intellij-tab-groups-java/compare/v1.1.0...v1.1.1
