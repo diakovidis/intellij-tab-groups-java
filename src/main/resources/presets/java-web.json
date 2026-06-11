@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Modules",      "order": 0, "regex": ".*\\.module\\.ts$",                  "enabled": true },
+    { "name": "HTML",         "order": 1, "regex": ".*\\.component\\.html$",             "enabled": true },
+    { "name": "Components",   "order": 2, "regex": ".*\\.component\\.ts$",               "enabled": true },
+    { "name": "Styles",       "order": 3, "regex": ".*\\.(scss|css)$",                   "enabled": true },
+    { "name": "Services",     "order": 4, "regex": ".*\\.service\\.ts$",                 "enabled": true },
+    { "name": "Guards",       "order": 5, "regex": ".*\\.guard\\.ts$",                   "enabled": true },
+    { "name": "Java Resources","order": 6, "regex": ".*Resource\\.java$",                "enabled": true },
+    { "name": "Java Services","order": 7, "regex": ".*Service\\.java$",                  "enabled": true },
+    { "name": "Java Repos",   "order": 8, "regex": ".*Repository\\.java$",               "enabled": true }
+  ]
+}

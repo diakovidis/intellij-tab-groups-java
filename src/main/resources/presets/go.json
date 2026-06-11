@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",      "order": 0, "regex": ".*_test\\.go$",                        "enabled": true },
+    { "name": "Handlers",   "order": 1, "regex": ".*/handler(s)?/.*\\.go$",              "enabled": true },
+    { "name": "Services",   "order": 2, "regex": ".*/service(s)?/.*\\.go$",              "enabled": true },
+    { "name": "Models",     "order": 3, "regex": ".*/model(s)?/.*\\.go$",                "enabled": true },
+    { "name": "Repository", "order": 4, "regex": ".*/repo(sitory)?/.*\\.go$",            "enabled": true },
+    { "name": "Config",     "order": 5, "regex": ".*/config(uration)?/.*\\.go$",         "enabled": true }
+  ]
+}

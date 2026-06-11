@@ -30,8 +30,9 @@ public final class TabSorter {
      * @return a new list of files in the desired tab order
      */
     public static List<VirtualFile> sort(List<VirtualFile> files, List<TabGroup> tabGroups) {
-        // Sort groups by order ascending for matching priority
+        // Sort groups by order ascending for matching priority; skip disabled groups
         List<TabGroup> sortedGroups = new ArrayList<>(tabGroups);
+        sortedGroups.removeIf(g -> !g.isEnabled());
         sortedGroups.sort(Comparator.comparingInt(TabGroup::getOrder));
 
         // Default order for unmatched files: one higher than the max group order

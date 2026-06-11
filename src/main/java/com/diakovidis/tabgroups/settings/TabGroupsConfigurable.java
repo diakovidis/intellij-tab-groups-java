@@ -76,6 +76,7 @@ public class TabGroupsConfigurable implements Configurable {
             if (!ga.getName().equals(gb.getName())) return false;
             if (ga.getOrder() != gb.getOrder()) return false;
             if (!ga.getRegex().equals(gb.getRegex())) return false;
+            if (ga.isEnabled() != gb.isEnabled()) return false;
         }
         return true;
     }

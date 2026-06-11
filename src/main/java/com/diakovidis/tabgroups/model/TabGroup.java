@@ -9,24 +9,42 @@ public class TabGroup {
     private String name;
     private int order;
     private String regex;
+    private boolean enabled;
 
     public TabGroup() {
         this.name = "";
         this.order = 0;
         this.regex = "";
+        this.enabled = true;
     }
 
     public TabGroup(String name, int order, String regex) {
         this.name = name;
         this.order = order;
         this.regex = regex != null ? regex : "";
+        this.enabled = true;
+    }
+
+    public TabGroup(String name, int order, String regex, boolean enabled) {
+        this.name = name;
+        this.order = order;
+        this.regex = regex != null ? regex : "";
+        this.enabled = enabled;
     }
 
     /**
      * Creates a deep copy of this TabGroup.
      */
     public TabGroup copy() {
-        return new TabGroup(this.name, this.order, this.regex);
+        return new TabGroup(this.name, this.order, this.regex, this.enabled);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getName() {
@@ -55,6 +73,6 @@ public class TabGroup {
 
     @Override
     public String toString() {
-        return name + " (order=" + order + ", regex=" + regex + ")";
+        return name + " (order=" + order + ", regex=" + regex + ", enabled=" + enabled + ")";
     }
 }

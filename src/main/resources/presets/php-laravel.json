@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",        "order": 0, "regex": ".*Test\\.php$",                      "enabled": true },
+    { "name": "Controllers",  "order": 1, "regex": ".*Controller\\.php$",                "enabled": true },
+    { "name": "Models",       "order": 2, "regex": ".*/Models/.*\\.php$",                "enabled": true },
+    { "name": "Requests",     "order": 3, "regex": ".*Request\\.php$",                   "enabled": true },
+    { "name": "Resources",    "order": 4, "regex": ".*Resource\\.php$",                  "enabled": true },
+    { "name": "Services",     "order": 5, "regex": ".*Service\\.php$",                   "enabled": true },
+    { "name": "Repositories", "order": 6, "regex": ".*Repository\\.php$",                "enabled": true },
+    { "name": "Migrations",   "order": 7, "regex": ".*/migrations/.*\\.php$",            "enabled": true }
+  ]
+}

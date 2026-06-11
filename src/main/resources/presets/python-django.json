@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",        "order": 0, "regex": ".*test_.*\\.py$",                    "enabled": true },
+    { "name": "Models",       "order": 1, "regex": ".*/models(\\.py|/.*\\.py)$",         "enabled": true },
+    { "name": "Views",        "order": 2, "regex": ".*/views(\\.py|/.*\\.py)$",          "enabled": true },
+    { "name": "Serializers",  "order": 3, "regex": ".*serializers?(\\.py|/.*\\.py)$",   "enabled": true },
+    { "name": "URLs",         "order": 4, "regex": ".*urls\\.py$",                       "enabled": true },
+    { "name": "Settings",     "order": 5, "regex": ".*settings.*\\.py$",                 "enabled": true },
+    { "name": "Admin",        "order": 6, "regex": ".*admin\\.py$",                      "enabled": true }
+  ]
+}

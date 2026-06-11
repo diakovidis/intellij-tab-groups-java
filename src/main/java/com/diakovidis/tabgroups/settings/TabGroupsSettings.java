@@ -44,7 +44,7 @@ public final class TabGroupsSettings implements PersistentStateComponent<TabGrou
     public List<TabGroup> getTabGroups() {
         List<TabGroup> copy = new ArrayList<>();
         for (TabGroupState gs : myState.tabGroups) {
-            copy.add(new TabGroup(gs.name, gs.order, gs.regex));
+            copy.add(new TabGroup(gs.name, gs.order, gs.regex, gs.enabled));
         }
         return copy;
     }
@@ -59,6 +59,7 @@ public final class TabGroupsSettings implements PersistentStateComponent<TabGrou
             gs.name = group.getName();
             gs.order = group.getOrder();
             gs.regex = group.getRegex();
+            gs.enabled = group.isEnabled();
             stateList.add(gs);
         }
         myState.tabGroups = stateList;
@@ -78,5 +79,6 @@ public final class TabGroupsSettings implements PersistentStateComponent<TabGrou
         public String name = "";
         public int order = 0;
         public String regex = "";
+        public boolean enabled = true;  // defaults to true for existing configs without this field
     }
 }

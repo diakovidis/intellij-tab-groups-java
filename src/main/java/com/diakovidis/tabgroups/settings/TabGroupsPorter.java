@@ -9,6 +9,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.diakovidis.tabgroups.model.TabGroup;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -88,6 +90,26 @@ public final class TabGroupsPorter {
                     "Failed to write file:\n" + ex.getMessage(),
                     "Export Failed", JOptionPane.ERROR_MESSAGE);
             return false;
+        }
+    }
+
+    // ── Preset loader ─────────────────────────────────────────────────────────
+
+    /**
+     * Loads a built-in preset from a classpath resource (e.g. {@code /presets/java-maven.json}).
+     *
+     * @param resourcePath absolute classpath path to the preset JSON
+     * @return the parsed list of tab groups, or {@code null} if the resource was not found
+     * @throws JsonSyntaxException     if the resource content is not valid JSON
+     * @throws IllegalArgumentException if the JSON does not match the expected format
+     */
+    public static @Nullable List<TabGroup> loadPreset(String resourcePath) {
+        try (java.io.InputStream is = TabGroupsPorter.class.getResourceAsStream(resourcePath)) {
+            if (is == null) return null;
+            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            return deserialize(json);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to read preset resource: " + resourcePath, ex);
         }
     }
 

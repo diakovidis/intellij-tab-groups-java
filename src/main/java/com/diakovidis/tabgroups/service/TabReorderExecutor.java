@@ -78,8 +78,9 @@ public final class TabReorderExecutor {
     public static int reorder(@NotNull Project project, @NotNull List<TabGroup> tabGroups) {
         if (project.isDisposed()) return 0;
 
-        // Pre-sort groups once so matching priority is stable
+        // Pre-sort groups once so matching priority is stable; skip disabled groups
         List<TabGroup> sortedGroups = new ArrayList<>(tabGroups);
+        sortedGroups.removeIf(g -> !g.isEnabled());
         sortedGroups.sort(Comparator.comparingInt(TabGroup::getOrder));
 
         int defaultOrder = sortedGroups.isEmpty()
@@ -294,6 +295,7 @@ public final class TabReorderExecutor {
         if (IS_REORDERING.get()) return;
 
         List<TabGroup> sortedGroups = new ArrayList<>(tabGroups);
+        sortedGroups.removeIf(g -> !g.isEnabled());
         sortedGroups.sort(Comparator.comparingInt(TabGroup::getOrder));
         int defaultOrder = sortedGroups.isEmpty()
                 ? Integer.MAX_VALUE

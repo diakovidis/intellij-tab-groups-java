@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",       "order": 0, "regex": ".*Test\\.kt$",                        "enabled": true },
+    { "name": "Activities",  "order": 1, "regex": ".*Activity\\.kt$",                    "enabled": true },
+    { "name": "Fragments",   "order": 2, "regex": ".*Fragment\\.kt$",                    "enabled": true },
+    { "name": "ViewModels",  "order": 3, "regex": ".*ViewModel\\.kt$",                   "enabled": true },
+    { "name": "Adapters",    "order": 4, "regex": ".*Adapter\\.kt$",                     "enabled": true },
+    { "name": "Repository",  "order": 5, "regex": ".*Repository\\.kt$",                  "enabled": true },
+    { "name": "Models",      "order": 6, "regex": ".*/model(s)?/.*\\.kt$",               "enabled": true },
+    { "name": "Layouts",     "order": 7, "regex": ".*/layout/.*\\.xml$",                 "enabled": true }
+  ]
+}

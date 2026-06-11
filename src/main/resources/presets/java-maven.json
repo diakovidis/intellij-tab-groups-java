@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",        "order": 0, "regex": ".*Test\\.java$",                     "enabled": true },
+    { "name": "Controllers",  "order": 1, "regex": ".*(Controller|Resource)\\.java$",    "enabled": true },
+    { "name": "Services",     "order": 2, "regex": ".*Service(Impl)?\\.java$",           "enabled": true },
+    { "name": "Repositories", "order": 3, "regex": ".*(Repository|Dao)\\.java$",         "enabled": true },
+    { "name": "Entities",     "order": 4, "regex": ".*(Entity|Model|Dto)\\.java$",       "enabled": true },
+    { "name": "Config",       "order": 5, "regex": ".*(Config|Configuration)\\.java$",  "enabled": true }
+  ]
+}

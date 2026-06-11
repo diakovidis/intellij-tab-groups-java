@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Modules",      "order": 0, "regex": ".*\\.module\\.ts$",                  "enabled": true },
+    { "name": "HTML",         "order": 1, "regex": ".*\\.component\\.html$",             "enabled": true },
+    { "name": "Components",   "order": 2, "regex": ".*\\.component\\.ts$",               "enabled": true },
+    { "name": "Styles",       "order": 3, "regex": ".*\\.component\\.(scss|css)$",       "enabled": true },
+    { "name": "Services",     "order": 4, "regex": ".*\\.service\\.ts$",                 "enabled": true },
+    { "name": "Guards",       "order": 5, "regex": ".*\\.guard\\.ts$",                   "enabled": true },
+    { "name": "Interceptors", "order": 6, "regex": ".*\\.interceptor\\.ts$",             "enabled": true },
+    { "name": "Models",       "order": 7, "regex": ".*\\.(model|interface)\\.ts$",       "enabled": true },
+    { "name": "Specs",        "order": 8, "regex": ".*\\.spec\\.ts$",                    "enabled": true }
+  ]
+}

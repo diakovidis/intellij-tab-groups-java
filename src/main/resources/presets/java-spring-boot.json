@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "tabGroups": [
+    { "name": "Tests",        "order": 0, "regex": ".*Test\\.java$",                    "enabled": true },
+    { "name": "Controllers",  "order": 1, "regex": ".*Controller\\.java$",              "enabled": true },
+    { "name": "Services",     "order": 2, "regex": ".*Service(Impl)?\\.java$",          "enabled": true },
+    { "name": "Repositories", "order": 3, "regex": ".*Repository\\.java$",              "enabled": true },
+    { "name": "Entities",     "order": 4, "regex": ".*Entity\\.java$",                  "enabled": true },
+    { "name": "DTOs",         "order": 5, "regex": ".*Dto\\.java$",                     "enabled": true },
+    { "name": "Config",       "order": 6, "regex": ".*(Config|Configuration)\\.java$", "enabled": true },
+    { "name": "Properties",   "order": 7, "regex": ".*application.*\\.(yml|yaml|properties)$", "enabled": true }
+  ]
+}
